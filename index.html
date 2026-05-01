@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorio Químico Interactivo | Secundaria</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Explorador de Química Moderna</h1>
+        <nav>
+            <button class="nav-btn active" data-target="tabla">Tabla Periódica</button>
+            <button class="nav-btn" data-target="enlaces">Enlaces Químicos</button>
+            <button class="nav-btn" data-target="quiz">Desafío Final</button>
+        </nav>
+    </header>
+
+    <main id="main-content">
+        <!-- Sección Tabla Periódica -->
+        <section id="tabla" class="content-section active">
+            <h2>Tabla Periódica Interactiva</h2>
+            <p>Haz clic en un elemento para descubrir su secreto.</p>
+            <div class="periodic-table" id="periodic-table-container">
+                <!-- Se genera con JS por rendimiento -->
+            </div>
+            <div id="element-detail" class="detail-card" aria-live="polite">
+                <p>Selecciona un elemento para ver sus propiedades.</p>
+            </div>
+        </section>
+
+        <!-- Sección Enlaces -->
+        <section id="enlaces" class="content-section">
+            <h2>Laboratorio de Enlaces</h2>
+            <div class="lab-container">
+                <div class="drop-zone" id="atom-1">Átomo A</div>
+                <div class="plus">+</div>
+                <div class="drop-zone" id="atom-2">Átomo B</div>
+                <button id="btn-enlazar">Simular Enlace</button>
+            </div>
+            <div id="enlace-result" class="feedback"></div>
+        </section>
+
+        <!-- Sección Quiz -->
+        <section id="quiz" class="content-section">
+            <h2>Reto de Conocimiento</h2>
+            <div id="quiz-container">
+                <div id="question"></div>
+                <div id="options"></div>
+                <div id="score-board">Puntos: <span id="score">0</span></div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Recurso Educativo Digital - Química Secundaria</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
