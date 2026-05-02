@@ -1,69 +1,93 @@
-// Datos de ejemplo (Escalable a un JSON externo)
-const elementos = [
-    { n: 1, sym: "H", name: "Hidrógeno", desc: "Gas inflamable, el más abundante del universo.", cat: "No metal" },
-    { n: 2, sym: "He", name: "Helio", desc: "Gas noble, usado en globos y láseres.", cat: "Gas Noble" },
-    { n: 3, sym: "Li", name: "Litio", desc: "Metal blando, usado en baterías.", cat: "Alcalino" },
-    // Se pueden agregar todos los elementos aquí
-];
+const app = {
+    state: {
+        points: 0,
+        currentTab: 'inicio',
+        atom: { p: 0, n: 0, e: 0 },
+        progress: 0
+    },
 
-// 1. Navegación entre pestañas
-document.querySelectorAll('.nav-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
+    init() {
+        this.bindEvents();
+        this.renderPeriodicTable();
+        this.updateUI();
+    },
+
+    bindEvents() {
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                this.switchTab(e.target.dataset.tab);
+            });
+        });
+    },
+
+    switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
         
-        btn.classList.add('active');
-        document.getElementById(btn.dataset.target).classList.add('active');
-    });
-});
+        document.getElementById(tabId).classList.add('active');
+        document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+        
+        this.state.currentTab = tabId;
+        this.addPoints(5); // Recompensa por exploración
+    },
 
-// 2. Renderizar Tabla Periódica
-const tableContainer = document.getElementById('periodic-table-container');
-const detailCard = document.getElementById('element-detail');
+    addPoints(pts) {
+        this.state.points += pts;
+        this.state.progress = Math.min(this.state.progress + 2, 100);
+        this.updateUI();
+    },
 
-elementos.forEach(el => {
-    const div = document.createElement('div');
-    div.className = 'element';
-    div.innerHTML = `<strong>${el.sym}</strong><small>${el.n}</small>`;
-    div.onclick = () => {
-        detailCard.innerHTML = `
-            <h3>${el.name} (${el.sym})</h3>
-            <p><strong>Categoría:</strong> ${el.cat}</p>
-            <p>${el.desc}</p>
-        `;
-    };
-    tableContainer.appendChild(div);
-});
+    updateUI() {
+        document.getElementById('score').innerText = `Puntos: ${this.state.points}`;
+        document.getElementById('progress-bar').style.width = `${this.state.progress}%`;
+        
+        const rankMsg = this.state.points > 100 ? "Científico Senior" : "Recluta";
+        document.getElementById('rank').innerText = `Rango: ${rankMsg}`;
+    },
 
-// 3. Quiz de Gamificación
-const quizData = [
-    { q: "¿Cuál es el símbolo del Hidrógeno?", a: ["H", "He", "Li"], correct: 0 },
-    { q: "¿Qué gas se usa para inflar globos?", a: ["O", "He", "N"], correct: 1 }
-];
+    // Lógica del Laboratorio de Átomos
+    addParticle(type) {
+        this.state.atom[type]++;
+        const info = document.getElementById('atom-info');
+        const {p, e} = this.state.atom;
+        
+        let carga = p - e;
+        let tipoCarga = carga === 0 ? "Neutro" : (carga > 0 ? "Catión" : "Anión");
+        
+        info.innerHTML = `Partículas -> P:${p} | E:${e} <br> <strong>Estado: ${tipoCarga} (${carga})</strong>`;
+        
+        // Retroalimentación inmediata
+        this.showFeedback(`¡Partícula ${type} añadida al núcleo!`, "success");
+    },
 
-let currentScore = 0;
-const questionEl = document.getElementById('question');
-const optionsEl = document.getElementById('options');
+    showFeedback(msg, type) {
+        const bar = document.getElementById('feedback-msg');
+        bar.innerText = msg;
+        bar.style.color = type === "success" ? "var(--accent-green)" : "orange";
+    },
 
-function loadQuiz() {
-    const q = quizData[0]; // Simplificado para el ejemplo
-    questionEl.innerText = q.q;
-    optionsEl.innerHTML = '';
-    q.a.forEach((opt, index) => {
-        const btn = document.createElement('button');
-        btn.className = 'option-btn';
-        btn.innerText = opt;
-        btn.onclick = () => {
-            if(index === q.correct) {
-                currentScore += 10;
-                alert("¡Correcto! +10 puntos");
-            } else {
-                alert("Sigue intentándolo.");
-            }
-            document.getElementById('score').innerText = currentScore;
-        };
-        optionsEl.appendChild(btn);
-    });
-}
+    renderPeriodicTable() {
+        const container = document.getElementById('periodic-table');
+        const elements = [
+            {s: 'H', n: 'Hidrógeno', z: 1, c: 'Gas'},
+            {s: 'He', n: 'Helio', z: 2, c: 'Noble'},
+            {s: 'Li', n: 'Litio', z: 3, c: 'Metal'},
+            // ... Se pueden expandir más elementos aquí
+        ];
 
-loadQuiz();
+        elements.forEach(el => {
+            const div = document.createElement('div');
+            div.className = 'el-card';
+            div.innerHTML = `<strong>${el.s}</strong><br>${el.z}`;
+            div.onclick = () => {
+                document.getElementById('element-detail').innerHTML = 
+                    `<h3>${el.n} (${el.s})</h3><p>Número Atómico: ${el.z}. Uso común: ${el.c}.</p>`;
+                this.addPoints(2);
+            };
+            container.appendChild(div);
+        });
+    }
+};
+
+// Iniciar aplicación al cargar
+window.onload = () => app.init();
