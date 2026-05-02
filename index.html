@@ -3,81 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quimiverso: Misión 8°</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Laboratorio Químico Pro - 8.º</title>
+    <style>
+        :root {
+            --primary: #0056b3;
+            --secondary: #e7f1ff;
+            --white: #ffffff;
+            --text: #212529;
+            --accent: #0dcaf0;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f8f9fa;
+            color: var(--text);
+            margin: 0;
+        }
+
+        /* Navegación Profesional */
+        .navbar {
+            background: var(--primary);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky; top: 0; z-index: 100;
+        }
+
+        .nav-links button {
+            background: none; border: none; color: white;
+            padding: 10px; cursor: pointer; opacity: 0.8;
+        }
+
+        .nav-links button.active { opacity: 1; border-bottom: 2px solid var(--accent); }
+
+        .container { max-width: 1000px; margin: 30px auto; padding: 20px; }
+
+        /* Secciones */
+        .tab-content { display: none; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .tab-content.active { display: block; animation: slideIn 0.3s ease; }
+
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* DISEÑO DE LA TABLA DINÁMICA */
+        .grid-tabla {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .card-elemento {
+            border: 2px solid var(--secondary);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .card-elemento:hover {
+            border-color: var(--primary);
+            background: var(--secondary);
+            transform: scale(1.05);
+        }
+
+        .card-elemento .simbolo { font-size: 1.5rem; font-weight: bold; color: var(--primary); }
+        .card-elemento .numero { font-size: 0.8rem; color: #666; }
+
+        .info-box {
+            border-left: 5px solid var(--primary);
+            background: var(--secondary);
+            padding: 15px;
+            margin: 15px 0;
+        }
+    </style>
 </head>
 <body>
-    <header class="main-header">
-        <div class="logo">⚛️ QUIMIVERSO</div>
-        <div class="user-stats">
-            <span id="rank">Rango: Recluta</span>
-            <div class="progress-container">
-                <div id="progress-bar" class="progress-bar"></div>
-            </div>
-            <span id="score">Puntos: 0</span>
+
+    <nav class="navbar">
+        <div class="logo">🧪 InfoQuim 8.º</div>
+        <div class="nav-links">
+            <button class="t-btn active" onclick="navegar(event, 'inicio')">Átomo</button>
+            <button class="t-btn" onclick="navegar(event, 'tabla')">Tabla Periódica</button>
+            <button class="t-btn" onclick="navegar(event, 'enlaces')">Enlaces</button>
         </div>
-    </header>
+    </nav>
 
-    <main class="app-container">
-        <!-- Navegación por Módulos -->
-        <nav class="side-nav" role="navigation" aria-label="Menú de misiones">
-            <button class="nav-btn active" data-tab="inicio">🚀 Inicio</button>
-            <button class="nav-btn" data-tab="atomo">🔬 El Átomo</button>
-            <button class="nav-btn" data-tab="tabla">📅 Tabla Periódica</button>
-            <button class="nav-btn" data-tab="enlaces">🔗 Enlaces</button>
-            <button class="nav-btn" data-tab="laboratorio">🧪 Lab Virtual</button>
-            <button class="nav-btn" data-tab="evaluacion">🏆 Evaluación</button>
-        </nav>
-
-        <!-- Contenido Dinámico -->
-        <section class="content-area">
-            <!-- Pestaña Inicio -->
-            <div id="inicio" class="tab-content active">
-                <div class="hero-section">
-                    <h1>Bienvenido, Investigador</h1>
-                    <p>El equilibrio químico de la ciudad está en peligro. Tu misión es dominar la materia para restaurar el orden.</p>
-                    <button class="cta-btn" onclick="app.nextTab('atomo')">Comenzar Misión</button>
-                </div>
-            </div>
-
-            <!-- Pestaña El Átomo (Simulador Simple integrado) -->
-            <div id="atomo" class="tab-content">
-                <h2>Constructor Atómico</h2>
-                <div class="sim-container">
-                    <div class="atom-visualizer" id="atom-view">
-                        <!-- Representación del núcleo y electrones aquí -->
-                        <div id="nucleus" class="nucleus"></div>
-                        <div id="orbit-1" class="orbit"></div>
-                    </div>
-                    <div class="controls">
-                        <h3>Añadir Partículas</h3>
-                        <button onclick="app.addParticle('p')">Protón (+)</button>
-                        <button onclick="app.addParticle('n')">Neutrón (o)</button>
-                        <button onclick="app.addParticle('e')">Electrón (-)</button>
-                        <div class="info-box" id="atom-info">
-                            Átomo: Neutro | Z: 0
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Pestaña Tabla Periódica -->
-            <div id="tabla" class="tab-content">
-                <h2>Explorador de Elementos</h2>
-                <div class="periodic-grid" id="periodic-table">
-                    <!-- Generado por JS para mantenibilidad -->
-                </div>
-                <div id="element-detail" class="detail-card">
-                    Selecciona un elemento para ver su poder cotidiano.
-                </div>
+    <div class="container">
+        <!-- SECCIÓN INICIO -->
+        <section id="inicio" class="tab-content active">
+            <h1>El Átomo en 8.º Grado</h1>
+            <p>El átomo es la unidad básica de la materia. Se compone de un núcleo y una corteza.</p>
+            <div class="info-box">
+                <p><strong>Dato Maestro:</strong> El número de protones es el "DNI" del átomo; nunca cambia para un mismo elemento[cite: 1].</p>
             </div>
         </section>
-    </main>
 
-    <footer class="footer-status">
-        <div id="feedback-msg">Sistema listo para la investigación...</div>
-    </footer>
+        <!-- SECCIÓN TABLA (CARGA DINÁMICA) -->
+        <section id="tabla" class="tab-content">
+            <h1>Explorador de Elementos</h1>
+            <p>Esta tabla se genera automáticamente desde tu archivo <code>elementos.json</code>.</p>
+            <div id="contenedor-elementos" class="grid-tabla">
+                <!-- Aquí JavaScript insertará los elementos -->
+                <p>Cargando elementos...</p>
+            </div>
+        </section>
 
-    <script src="script.js"></script>
+        <!-- SECCIÓN ENLACES -->
+        <section id="enlaces" class="tab-content">
+            <h1>Enlaces Químicos</h1>
+            <div class="info-box">
+                <h3>Enlace Iónico</h3>
+                <p>Transferencia de electrones. Típico entre un metal y un no metal[cite: 1].</p>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // FUNCIÓN DE NAVEGACIÓN
+        function navegar(e, id) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.t-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            e.currentTarget.classList.add('active');
+
+            if(id === 'tabla') cargarTabla();
+        }
+
+        // FUNCIÓN PARA LEER EL JSON Y CREAR LA TABLA
+        async function cargarTabla() {
+            const contenedor = document.getElementById('contenedor-elementos');
+            
+            try {
+                // Intentamos leer el archivo
+                const respuesta = await fetch('elementos.json');
+                const datos = await respuesta.json();
+                
+                // Limpiamos el mensaje de "Cargando"
+                contenedor.innerHTML = '';
+
+                // Dibujamos cada elemento
+                datos.forEach(el => {
+                    contenedor.innerHTML += `
+                        <div class="card-elemento">
+                            <div class="numero">${el.z}</div>
+                            <div class="simbolo">${el.simbolo}</div>
+                            <div class="nombre">${el.nombre}</div>
+                            <div style="font-size: 0.7rem">${el.grupo}</div>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                contenedor.innerHTML = `
+                    <div style="color: red; padding: 20px;">
+                        <strong>Error de carga:</strong> Para ver la tabla dinámica, 
+                        asegúrate de que el archivo 'elementos.json' esté en la misma carpeta 
+                        y que estés viendo la página desde GitHub o un servidor local.
+                    </div>`;
+            }
+        }
+    </script>
 </body>
 </html>
