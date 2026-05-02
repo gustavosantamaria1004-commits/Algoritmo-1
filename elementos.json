@@ -1,0 +1,6 @@
+[
+    { "z": 1, "simbolo": "H", "nombre": "Hidrógeno", "masa": 1.008, "grupo": "No metal" },
+    { "z": 2, "simbolo": "He", "nombre": "Helio", "masa": 4.002, "grupo": "Gas noble" },
+    { "z": 3, "simbolo": "Li", "nombre": "Litio", "masa": 6.94, "grupo": "Alcalino" },
+    { "z": 4, "simbolo": "Be", "nombre": "Berilio", "masa": 9.012, "grupo": "Alcalinotérreo" }
+]
